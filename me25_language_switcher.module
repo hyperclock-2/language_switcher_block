@@ -1,0 +1,178 @@
+<?php
+/**
+ * @file me25_language_switcher.module
+ * ME25 Language Switcher module with FamFamFam flags for Backdrop CMS.
+ */
+
+/**
+ * Implements hook_config_info().
+ */
+function me25_language_switcher_config_info() {
+  $prefixes['me25_language_switcher.settings'] = array(
+    'label' => t('ME25 Language Switcher settings'),
+    'group' => t('Configuration'),
+  );
+  return $prefixes;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function me25_language_switcher_menu() {
+  $items = array();
+  
+  $items['admin/config/regional/me25-language-switcher'] = array(
+    'title' => 'ME25 Language Switcher',
+    'description' => 'Configure ME25 language switcher with flags.',
+    'page callback' => 'backdrop_get_form',
+    'page arguments' => array('me25_language_switcher_admin_form'),
+    'access arguments' => array('administer site configuration'),
+    'file' => 'me25_language_switcher.admin.inc',
+  );
+  
+  return $items;
+}
+
+/**
+ * Implements hook_block_info().
+ */
+function me25_language_switcher_block_info() {
+  $blocks = array();
+  
+  $blocks['language_switcher'] = array(
+    'info' => t('ME25 Language Switcher'),
+    'description' => t('Displays language switcher with country flags.'),
+  );
+  
+  return $blocks;
+}
+
+/**
+ * Implements hook_block_view().
+ */
+function me25_language_switcher_block_view($delta = '') {
+  $block = array();
+  
+  if ($delta == 'language_switcher') {
+    $block['subject'] = NULL;
+    $block['content'] = me25_language_switcher_block_content();
+  }
+  
+  return $block;
+}
+
+/**
+ * Block content callback.
+ */
+function me25_language_switcher_block_content() {
+  $languages = language_list();
+  
+  if (empty($languages) || count($languages) <= 1) {
+    return array();
+  }
+  
+  $path = backdrop_is_front_page() ? '<front>' : $_GET['q'];
+  $links = array();
+  $current_language = $GLOBALS['language']->langcode;
+  
+  // Get display settings
+  $display_mode = config_get('me25_language_switcher.settings', 'display_mode');
+  if (empty($display_mode)) {
+    $display_mode = 'flag_with_name';
+  }
+  
+  // Flag mapping
+  $flag_map = me25_language_switcher_get_flag_mapping();
+  
+  foreach ($languages as $langcode => $language) {
+    $flag = isset($flag_map[$langcode]) ? $flag_map[$langcode] : $langcode;
+    $flag_img = '<img src="' . base_path() . backdrop_get_path('module', 'me25_language_switcher') . '/flags/' . $flag . '.png" alt="' . $language->name . '" title="' . $language->name . '" class="language-flag" />';
+    
+    // Build title based on display mode
+    switch ($display_mode) {
+      case 'only_flag':
+        $title = $flag_img;
+        break;
+      
+      case 'only_name':
+        $title = $language->native;
+        break;
+      
+      case 'flag_with_name':
+      default:
+        $title = $flag_img . ' <span class="language-name">' . $language->native . '</span>';
+        break;
+    }
+    
+    $links[$langcode] = array(
+      'title' => $title,
+      'href' => $path,
+      'language' => $language,
+      'html' => TRUE,
+      'attributes' => array(
+        'class' => array('language-link', 'language-link-' . $langcode, 'display-mode-' . $display_mode),
+      ),
+    );
+    
+    if ($langcode == $current_language) {
+      $links[$langcode]['attributes']['class'][] = 'active';
+    }
+  }
+  
+  $output = array(
+    '#theme' => 'links__language_block',
+    '#links' => $links,
+    '#attributes' => array('class' => array('me25-language-switcher')),
+  );
+  
+  // Add CSS
+  backdrop_add_css(backdrop_get_path('module', 'me25_language_switcher') . '/css/me25_language_switcher.css');
+  
+  return $output;
+}
+
+/**
+ * Get flag mapping for language codes.
+ */
+function me25_language_switcher_get_flag_mapping() {
+  return array(
+    'en' => 'gb',
+    'en-us' => 'us',
+    'en-gb' => 'gb',
+    'de' => 'de',
+    'fr' => 'fr',
+    'es' => 'es',
+    'it' => 'it',
+    'pt' => 'pt',
+    'pt-br' => 'br',
+    'nl' => 'nl',
+    'ru' => 'ru',
+    'pl' => 'pl',
+    'ja' => 'jp',
+    'zh-hans' => 'cn',
+    'zh-hant' => 'tw',
+    'ar' => 'sa',
+    'tr' => 'tr',
+    'sv' => 'se',
+    'da' => 'dk',
+    'no' => 'no',
+    'fi' => 'fi',
+    'cs' => 'cz',
+    'hu' => 'hu',
+    'ro' => 'ro',
+    'el' => 'gr',
+    'he' => 'il',
+    'th' => 'th',
+    'ko' => 'kr',
+    'vi' => 'vn',
+    'id' => 'id',
+    'uk' => 'ua',
+    'bg' => 'bg',
+    'hr' => 'hr',
+    'sk' => 'sk',
+    'sl' => 'si',
+    'lt' => 'lt',
+    'lv' => 'lv',
+    'et' => 'ee',
+  );
+}
