@@ -42,6 +42,7 @@ function me25_language_switcher_block_info() {
   $blocks['language_switcher'] = array(
     'info' => t('ME25 Language Switcher'),
     'description' => t('Displays language switcher with country flags.'),
+    'cache' => BACKDROP_CACHE_GLOBAL,
   );
   
   return $blocks;
@@ -71,12 +72,17 @@ function me25_language_switcher_block_content() {
     return array();
   }
   
-  $path = backdrop_is_front_page() ? '<front>' : $_GET['q'];
+  $path = current_path();
+  if (backdrop_is_front_page()) {
+    $path = '<front>';
+  }
+  
   $links = array();
   $current_language = $GLOBALS['language']->langcode;
   
-  // Get display settings
-  $display_mode = config_get('me25_language_switcher.settings', 'display_mode');
+  // Get display settings with proper config
+  $config = config('me25_language_switcher.settings');
+  $display_mode = $config->get('display_mode');
   if (empty($display_mode)) {
     $display_mode = 'flag_with_name';
   }

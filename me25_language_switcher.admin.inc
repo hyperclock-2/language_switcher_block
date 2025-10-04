@@ -8,9 +8,9 @@
  * Admin settings form.
  */
 function me25_language_switcher_admin_form($form, &$form_state) {
+  // Load config values
   $config = config('me25_language_switcher.settings');
-  
-  $form['#config'] = 'me25_language_switcher.settings';
+  $display_mode = $config->get('display_mode');
   
   $form['description'] = array(
     '#markup' => '<p>' . t('Configure how the ME25 language switcher should display languages.') . '</p>',
@@ -25,8 +25,26 @@ function me25_language_switcher_admin_form($form, &$form_state) {
       'only_flag' => t('Only flag'),
       'only_name' => t('Only language name'),
     ),
-    '#default_value' => $config->get('display_mode') ? $config->get('display_mode') : 'flag_with_name',
+    '#default_value' => isset($display_mode) ? $display_mode : 'flag_with_name',
   );
   
-  return system_settings_form($form);
+  // Add submit button
+  $form['actions']['#type'] = 'actions';
+  $form['actions']['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Save configuration'),
+  );
+  
+  return $form;
+}
+
+/**
+ * Form submit handler.
+ */
+function me25_language_switcher_admin_form_submit($form, &$form_state) {
+  $config = config('me25_language_switcher.settings');
+  $config->set('display_mode', $form_state['values']['display_mode']);
+  $config->save();
+  
+  backdrop_set_message(t('The configuration options have been saved.'));
 }

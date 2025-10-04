@@ -8,3 +8,10 @@ core = 1.x
 
 ; Dependencies
 dependencies[] = locale
+
+; Maintainer
+maintainers[hyperclock-2] = Max Elements
+maintainers_wanted = FALSE
+
+; Configure your module
+configure = admin/config/regional/me25-language-switcher
