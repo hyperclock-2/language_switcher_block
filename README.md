@@ -82,6 +82,18 @@ This project is licensed under the GPL-2.0-or-later License - see the [LICENSE](
 
 ME25 Language Switcher is maintained by [Max Elements](https://max-elements.com/), providing premium web development and cybersecurity solutions.
 
+## 🧰 ME25 Toolbox
+
+**ME25 Toolbox** represents Max Elements' commitment to building and maintaining quality Backdrop CMS modules and themes for the community. The "ME25" branding signifies our renewed focus on Backdrop development in 2025.
+
+This toolbox includes:
+- Essential utility modules (like Copyright and Language Switcher)
+- Professional themes
+- Client-proven solutions  
+- All maintained long-term as part of our business offerings
+
+ME25 Copyright is part of this ongoing initiative to contribute quality tools to the Backdrop ecosystem.
+
 ---
 
 *Built with care for the Backdrop CMS community* 🛠️
