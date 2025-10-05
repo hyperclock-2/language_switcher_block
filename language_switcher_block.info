@@ -1,11 +1,11 @@
-name = ME25 Language Switcher
+name = Language Switcher Block
 description = Language switcher block with country flags from FamFamFam. Display flags with language names, flags only, or text only.
 backdrop = 1.x
 package = translation
 type = module
 core = 1.x
 
-tags[] = ME25 Toolbox
+tags[] = Max Elements Toolbox
 
 ; Dependencies
 dependencies[] = locale
@@ -15,4 +15,4 @@ maintainers[hyperclock-2] = Max Elements
 maintainers_wanted = FALSE
 
 ; Configure your module
-configure = admin/config/regional/me25-language-switcher
+configure = admin/config/regional/language-switcher-block

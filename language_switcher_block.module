@@ -1,15 +1,15 @@
 <?php
 /**
- * @file me25_language_switcher.module
- * ME25 Language Switcher module with FamFamFam flags for Backdrop CMS.
+ * @file language_switcher_block.module
+ * Language Switcher Block  with FamFamFam flags for Backdrop CMS.
  */
 
 /**
  * Implements hook_config_info().
  */
-function me25_language_switcher_config_info() {
-  $prefixes['me25_language_switcher.settings'] = array(
-    'label' => t('ME25 Language Switcher settings'),
+function language_switcher_block_config_info() {
+  $prefixes['language_switcher_block.settings'] = array(
+    'label' => t('Language Switcher Block settings'),
     'group' => t('Configuration'),
   );
   return $prefixes;
@@ -18,16 +18,16 @@ function me25_language_switcher_config_info() {
 /**
  * Implements hook_menu().
  */
-function me25_language_switcher_menu() {
+function language_switcher_block_menu() {
   $items = array();
   
-  $items['admin/config/regional/me25-language-switcher'] = array(
-    'title' => 'ME25 Language Switcher',
-    'description' => 'Configure ME25 language switcher with flags.',
+  $items['admin/config/regional/language-switcher-block'] = array(
+    'title' => 'Language Switcher Block',
+    'description' => 'Configure language switcher block with flags.',
     'page callback' => 'backdrop_get_form',
-    'page arguments' => array('me25_language_switcher_admin_form'),
+    'page arguments' => array('language_switcher_block_admin_form'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'me25_language_switcher.admin.inc',
+    'file' => 'language_switcher_block.admin.inc',
   );
   
   return $items;
@@ -36,7 +36,7 @@ function me25_language_switcher_menu() {
 /**
  * Implements hook_block_info().
  */
-function me25_language_switcher_block_info() {
+function language_switcher_block_block_info() {
   $blocks = array();
   
   $blocks['language_switcher'] = array(
@@ -51,12 +51,12 @@ function me25_language_switcher_block_info() {
 /**
  * Implements hook_block_view().
  */
-function me25_language_switcher_block_view($delta = '') {
+function language_switcher_block_block_view($delta = '') {
   $block = array();
   
   if ($delta == 'language_switcher') {
     $block['subject'] = NULL;
-    $block['content'] = me25_language_switcher_block_content();
+    $block['content'] = language_switcher_block_block_content();
   }
   
   return $block;
@@ -65,7 +65,7 @@ function me25_language_switcher_block_view($delta = '') {
 /**
  * Block content callback.
  */
-function me25_language_switcher_block_content() {
+function language_switcher_block_block_content() {
   $languages = language_list();
   
   if (empty($languages) || count($languages) <= 1) {
@@ -81,18 +81,18 @@ function me25_language_switcher_block_content() {
   $current_language = $GLOBALS['language']->langcode;
   
   // Get display settings with proper config
-  $config = config('me25_language_switcher.settings');
+  $config = config('language_switcher_block.settings');
   $display_mode = $config->get('display_mode');
   if (empty($display_mode)) {
     $display_mode = 'flag_with_name';
   }
   
   // Flag mapping
-  $flag_map = me25_language_switcher_get_flag_mapping();
+  $flag_map = language_switcher_block_get_flag_mapping();
   
   foreach ($languages as $langcode => $language) {
     $flag = isset($flag_map[$langcode]) ? $flag_map[$langcode] : $langcode;
-    $flag_img = '<img src="' . base_path() . backdrop_get_path('module', 'me25_language_switcher') . '/flags/' . $flag . '.png" alt="' . $language->name . '" title="' . $language->name . '" class="language-flag" />';
+    $flag_img = '<img src="' . base_path() . backdrop_get_path('module', 'language_switcher_block') . '/flags/' . $flag . '.png" alt="' . $language->name . '" title="' . $language->name . '" class="language-flag" />';
     
     // Build title based on display mode
     switch ($display_mode) {
@@ -128,11 +128,11 @@ function me25_language_switcher_block_content() {
   $output = array(
     '#theme' => 'links__language_block',
     '#links' => $links,
-    '#attributes' => array('class' => array('me25-language-switcher')),
+    '#attributes' => array('class' => array('language-switcher-block')),
   );
   
   // Add CSS
-  backdrop_add_css(backdrop_get_path('module', 'me25_language_switcher') . '/css/me25_language_switcher.css');
+  backdrop_add_css(backdrop_get_path('module', 'language_switcher_block') . '/css/language_switcher_block.css');
   
   return $output;
 }
@@ -140,7 +140,7 @@ function me25_language_switcher_block_content() {
 /**
  * Get flag mapping for language codes.
  */
-function me25_language_switcher_get_flag_mapping() {
+function language_switcher_block_get_flag_mapping() {
   return array(
     'en' => 'gb',
     'en-us' => 'us',

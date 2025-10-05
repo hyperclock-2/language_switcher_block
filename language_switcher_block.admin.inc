@@ -1,19 +1,19 @@
 <?php
 /**
  * @file
- * Admin settings for ME25 Language Switcher module.
+ * Admin settings for Language Switcher Block.
  */
 
 /**
  * Admin settings form.
  */
-function me25_language_switcher_admin_form($form, &$form_state) {
+function language_switcher_block_admin_form($form, &$form_state) {
   // Load config values
-  $config = config('me25_language_switcher.settings');
+  $config = config('language_switcher_block.settings');
   $display_mode = $config->get('display_mode');
   
   $form['description'] = array(
-    '#markup' => '<p>' . t('Configure how the ME25 language switcher should display languages.') . '</p>',
+    '#markup' => '<p>' . t('Configure how the language switcher block should display languages.') . '</p>',
   );
   
   $form['display_mode'] = array(
@@ -41,8 +41,8 @@ function me25_language_switcher_admin_form($form, &$form_state) {
 /**
  * Form submit handler.
  */
-function me25_language_switcher_admin_form_submit($form, &$form_state) {
-  $config = config('me25_language_switcher.settings');
+function language_switcher_block_admin_form_submit($form, &$form_state) {
+  $config = config('language_switcher_block.settings');
   $config->set('display_mode', $form_state['values']['display_mode']);
   $config->save();
   
