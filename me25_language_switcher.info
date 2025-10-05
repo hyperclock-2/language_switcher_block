@@ -1,9 +1,11 @@
 name = ME25 Language Switcher
 description = Language switcher block with country flags from FamFamFam. Display flags with language names, flags only, or text only.
 backdrop = 1.x
-package = ME25 Toolbox
+package = translation
 type = module
 core = 1.x
+
+tags[] = ME25 Toolbox
 
 ; Dependencies
 dependencies[] = locale
