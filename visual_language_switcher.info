@@ -6,8 +6,8 @@ backdrop = 1.x
 
 tags[] = language
 tags[] = translation
-tags[] = flags
-tags[] = multilingual
+tags[] = site navigation
+tags[] = user interface
 
 configure = admin/config/regional/visual-language-switcher
 
