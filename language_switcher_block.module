@@ -40,7 +40,7 @@ function language_switcher_block_block_info() {
   $blocks = array();
   
   $blocks['language_switcher'] = array(
-    'info' => t('ME25 Language Switcher'),
+    'info' => t('Language Switcher Block'),
     'description' => t('Displays language switcher with country flags.'),
     'cache' => BACKDROP_CACHE_GLOBAL,
   );
