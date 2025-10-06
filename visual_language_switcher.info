@@ -1,0 +1,17 @@
+name = Visual Language Switcher  
+description = Language switcher with country flags and multiple display modes. Part of Max Elements Toolbox.
+package = Translation
+core = 1.x
+backdrop = 1.x
+
+tags[] = language
+tags[] = translation
+tags[] = flags
+tags[] = multilingual
+
+configure = admin/config/regional/visual-language-switcher
+
+; Maintainer
+maintainers[hyperclock-2] = Max Elements
+maintainers_wanted = FALSE
+

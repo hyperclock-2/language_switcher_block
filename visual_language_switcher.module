@@ -1,15 +1,15 @@
 <?php
 /**
- * @file language_switcher_block.module
- * Language Switcher Block  with FamFamFam flags for Backdrop CMS.
+ * @file visual_language_switcher.module
+ * Visual Language Switcher with FamFamFam flags for Backdrop CMS.
  */
 
 /**
  * Implements hook_config_info().
  */
-function language_switcher_block_config_info() {
-  $prefixes['language_switcher_block.settings'] = array(
-    'label' => t('Language Switcher Block settings'),
+function visual_language_switcher_config_info() {
+  $prefixes['visual_language_switcher.settings'] = array(
+    'label' => t('Visual Language Switcher settings'),
     'group' => t('Configuration'),
   );
   return $prefixes;
@@ -18,16 +18,16 @@ function language_switcher_block_config_info() {
 /**
  * Implements hook_menu().
  */
-function language_switcher_block_menu() {
+function visual_language_switcher_menu() {
   $items = array();
   
-  $items['admin/config/regional/language-switcher-block'] = array(
-    'title' => 'Language Switcher Block',
-    'description' => 'Configure language switcher block with flags.',
+  $items['admin/config/regional/visual-language-switcher'] = array(
+    'title' => 'Visual Language Switcher',
+    'description' => 'Configure Visual Language Switcher with flags.',
     'page callback' => 'backdrop_get_form',
-    'page arguments' => array('language_switcher_block_admin_form'),
+    'page arguments' => array('visual_language_switcher_admin_form'),
     'access arguments' => array('administer site configuration'),
-    'file' => 'language_switcher_block.admin.inc',
+    'file' => 'visual_language_switcher.admin.inc',
   );
   
   return $items;
@@ -36,11 +36,11 @@ function language_switcher_block_menu() {
 /**
  * Implements hook_block_info().
  */
-function language_switcher_block_block_info() {
+function visual_language_switcher_block_info() {
   $blocks = array();
   
   $blocks['language_switcher'] = array(
-    'info' => t('Language Switcher Block'),
+    'info' => t('Visual Language Switcher'),
     'description' => t('Displays language switcher with country flags.'),
     'cache' => BACKDROP_CACHE_GLOBAL,
   );
@@ -51,12 +51,12 @@ function language_switcher_block_block_info() {
 /**
  * Implements hook_block_view().
  */
-function language_switcher_block_block_view($delta = '') {
+function visual_language_switcher_block_view($delta = '') {
   $block = array();
   
   if ($delta == 'language_switcher') {
     $block['subject'] = NULL;
-    $block['content'] = language_switcher_block_block_content();
+    $block['content'] = visual_language_switcher_block_content();
   }
   
   return $block;
@@ -65,7 +65,7 @@ function language_switcher_block_block_view($delta = '') {
 /**
  * Block content callback.
  */
-function language_switcher_block_block_content() {
+function visual_language_switcher_block_content() {
   $languages = language_list();
   
   if (empty($languages) || count($languages) <= 1) {
@@ -81,18 +81,18 @@ function language_switcher_block_block_content() {
   $current_language = $GLOBALS['language']->langcode;
   
   // Get display settings with proper config
-  $config = config('language_switcher_block.settings');
+  $config = config('visual_language_switcher.settings');
   $display_mode = $config->get('display_mode');
   if (empty($display_mode)) {
     $display_mode = 'flag_with_name';
   }
   
   // Flag mapping
-  $flag_map = language_switcher_block_get_flag_mapping();
+  $flag_map = visual_language_switcher_get_flag_mapping();
   
   foreach ($languages as $langcode => $language) {
     $flag = isset($flag_map[$langcode]) ? $flag_map[$langcode] : $langcode;
-    $flag_img = '<img src="' . base_path() . backdrop_get_path('module', 'language_switcher_block') . '/flags/' . $flag . '.png" alt="' . $language->name . '" title="' . $language->name . '" class="language-flag" />';
+    $flag_img = '<img src="' . base_path() . backdrop_get_path('module', 'visual_language_switcher') . '/flags/' . $flag . '.png" alt="' . $language->name . '" title="' . $language->name . '" class="language-flag" />';
     
     // Build title based on display mode
     switch ($display_mode) {
@@ -128,11 +128,11 @@ function language_switcher_block_block_content() {
   $output = array(
     '#theme' => 'links__language_block',
     '#links' => $links,
-    '#attributes' => array('class' => array('language-switcher-block')),
+    '#attributes' => array('class' => array('visual-language-switcher')),
   );
   
   // Add CSS
-  backdrop_add_css(backdrop_get_path('module', 'language_switcher_block') . '/css/language_switcher_block.css');
+  backdrop_add_css(backdrop_get_path('module', 'visual_language_switcher') . '/css/visual_language_switcher.css');
   
   return $output;
 }
@@ -140,7 +140,7 @@ function language_switcher_block_block_content() {
 /**
  * Get flag mapping for language codes.
  */
-function language_switcher_block_get_flag_mapping() {
+function visual_language_switcher_get_flag_mapping() {
   return array(
     'en' => 'gb',
     'en-us' => 'us',
