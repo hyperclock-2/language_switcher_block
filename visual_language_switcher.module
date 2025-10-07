@@ -72,25 +72,27 @@ function visual_language_switcher_block_content() {
     return array();
   }
   
-  $path = current_path();
-  if (backdrop_is_front_page()) {
-    $path = '<front>';
+  // USE CORE LANGUAGE SWITCHING METHOD
+  $path = backdrop_is_front_page() ? '<front>' : $_GET['q'];
+  $links = language_negotiation_get_switch_links('language', $path);
+  
+  if (empty($links->links)) {
+    return array();
   }
   
-  $links = array();
   $current_language = $GLOBALS['language']->langcode;
   
-  // Get display settings with proper config
+  // Get display settings
   $config = config('visual_language_switcher.settings');
-  $display_mode = $config->get('display_mode');
-  if (empty($display_mode)) {
-    $display_mode = 'flag_with_name';
-  }
+  $display_mode = $config->get('display_mode', 'flag_with_name');
   
   // Flag mapping
   $flag_map = visual_language_switcher_get_flag_mapping();
   
-  foreach ($languages as $langcode => $language) {
+  $custom_links = array();
+  
+  foreach ($links->links as $langcode => $link) {
+    $language = $link['language'];
     $flag = isset($flag_map[$langcode]) ? $flag_map[$langcode] : $langcode;
     $flag_img = '<img src="' . base_path() . backdrop_get_path('module', 'visual_language_switcher') . '/flags/' . $flag . '.png" alt="' . $language->name . '" title="' . $language->name . '" class="language-flag" />';
     
@@ -99,20 +101,18 @@ function visual_language_switcher_block_content() {
       case 'only_flag':
         $title = $flag_img;
         break;
-      
       case 'only_name':
         $title = $language->native;
         break;
-      
       case 'flag_with_name':
       default:
         $title = $flag_img . ' <span class="language-name">' . $language->native . '</span>';
         break;
     }
     
-    $links[$langcode] = array(
+    $custom_links[$langcode] = array(
       'title' => $title,
-      'href' => $path,
+      'href' => $link['href'],
       'language' => $language,
       'html' => TRUE,
       'attributes' => array(
@@ -121,17 +121,16 @@ function visual_language_switcher_block_content() {
     );
     
     if ($langcode == $current_language) {
-      $links[$langcode]['attributes']['class'][] = 'active';
+      $custom_links[$langcode]['attributes']['class'][] = 'active';
     }
   }
   
   $output = array(
     '#theme' => 'links__language_block',
-    '#links' => $links,
+    '#links' => $custom_links,
     '#attributes' => array('class' => array('visual-language-switcher')),
   );
   
-  // Add CSS
   backdrop_add_css(backdrop_get_path('module', 'visual_language_switcher') . '/css/visual_language_switcher.css');
   
   return $output;
